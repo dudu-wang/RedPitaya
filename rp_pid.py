@@ -4,10 +4,9 @@ import socket
 
 # pylint: disable=R0904
 class RedPitaya(object):
-    """Class that represents the Red Pitaya. 
-    
-    :num_int: Input 1 or 2
+    """Class that represents the Red Pitaya.
 
+    :num_int: Input 1 or 2
     :num_out: Output 1 or 2
     """
     delimiter = '\r\n'
@@ -68,37 +67,35 @@ class RedPitaya(object):
         return self.tx_txt('OUTPUT{}:STATE {}'.format(num_out, int(state)))
 
     def get_output_state(self, num_out):
-        """Return whether fast analog outputs are enabled or disabled
+        """Return whether fast analog outputs are enabled or disabled.
 
         :returns: True if fast analog outputs are enabled, False if fast analog outputs are disabled
         """
-        response = self.txrx_txt('OUTPUT{}:STATE?'.format(num_out))
-        test = (response == "ON")
-        return bool(test)
+        return bool(self.txrx_txt('OUTPUT{}:STATE?'.format(num_out)))
 
     def set_generator_frequency(self, num_out, frequency):
-        """Set the frequency of fast analog outputs
+        """Set the frequency of fast analog outputs.
 
         :frequency: the frequency to set in Hz
         """
         return self.tx_txt('SOUR{}:FREQ:FIX {}'.format(num_out, frequency))
 
     def get_generator_frequency(self, num_out):
-        """Return the frequency of fast analog outputs
+        """Return the frequency of fast analog outputs.
 
         :returns: the frequency in Hz
         """
         return float(self.txrx_txt('SOUR{}:FREQ:FIX?'.format(num_out)))
 
     def set_generator_waveform(self, num_out, form):
-        """Set the waveform of fast analog outputs
+        """Set the waveform of fast analog outputs.
 
         :form: Form to set (SINE, SQUARE, TRIANGLE, SAWU, SAWD, PWM, ARBITRARY)
         """
         return self.tx_txt('SOUR{}:FUNC {}'.format(num_out, form))
 
     def get_generator_waveform(self, num_out):
-        """Return the waveform of fast analog outputs
+        """Return the waveform of fast analog outputs.
 
         :returns: the waveform of fast analog outputs
         """
@@ -106,7 +103,7 @@ class RedPitaya(object):
 
     def set_generator_amplitude(self, num_out, amplitude):
         """Set the amplitude voltage of fast analog outputs.
-        Amplitude + offset value must be less than maximum output range ± 1V
+        Amplitude + offset value must be less than maximum output range ± 1V.
 
         :amplitude: the amplitude to set in V
         """
@@ -121,7 +118,7 @@ class RedPitaya(object):
 
     def set_generator_offset(self, num_out, offset):
         """Set the offset voltage of fast analog outputs.
-        Amplitude + offset value must be less than maximum output range ± 1V
+        Amplitude + offset value must be less than maximum output range ± 1V.
 
         :offset: the offset voltage to set in V
         """
@@ -135,47 +132,47 @@ class RedPitaya(object):
         return float(self.txrx_txt('SOUR{}:VOLT:OFFS?'.format(num_out)))
 
     def set_setpoint(self, num_in, num_out, value):
-        """Set the PID setpoint
+        """Set the PID setpoint.
 
         :value: the value to set in V
         """
         return self.tx_txt('PID:IN{}:OUT{}:SETPoint {}'.format(num_in, num_out, value))
 
     def get_setpoint(self, num_in, num_out):
-        """Return the PID setpoint
+        """Return the PID setpoint.
 
         :returns: the setpoint in V
         """
         return float(self.txrx_txt('PID:IN{}:OUT{}:SETPoint?'.format(num_in, num_out)))
 
     def set_kp(self, num_in, num_out, gain):
-        """Set the P gain
+        """Set the P gain.
 
         :gain: the gain to set (0 to 4096)
         """
         return self.tx_txt('PID:IN{}:OUT{}:KP {}'.format(num_in, num_out, gain))
 
     def get_kp(self, num_in, num_out):
-        """Return the P gain
+        """Return the P gain.
 
         :returns: the P gain
         """
         return float(self.txrx_txt('PID:IN{}:OUT{}:KP?'.format(num_in, num_out)))
 
     def set_ki(self, num_in, num_out, gain):
-        """Set the I gain
+        """Set the I gain.
 
         :gain: the gain to set in 1/s. The unity gain frequency is ki/(2 pi)."""
         return self.tx_txt('PID:IN{}:OUT{}:KI {}'.format(num_in, num_out, gain))
 
     def get_ki(self, num_in, num_out):
-        """Return the I gain
+        """Return the I gain.
 
         :returns: the I gain in 1/s. The unity gain frequency is ki/(2 pi)."""
         return float(self.txrx_txt('PID:IN{}:OUT{}:KI?'.format(num_in, num_out)))
 
     def set_kd(self, num_in, num_out, gain):
-        """Set the D gain
+        """Set the D gain.
 
         :gain: the gain to set
         """
@@ -189,7 +186,7 @@ class RedPitaya(object):
         return float(self.txrx_txt('PID:IN{}:OUT{}:KD?'.format(num_in, num_out)))
 
     def set_int_reset_state(self, num_in, num_out, state):
-        """Reset the integrator register
+        """Reset the integrator register.
 
         :state: True to enable the integrator reset, False to disable the integrator reset
         """
@@ -201,11 +198,11 @@ class RedPitaya(object):
         :returns: True if the integrator reset is enabled, False if the integrator reset is disabled
         """
         response = self.txrx_txt('PID:IN{}:OUT{}:INT:RES?'.format(num_in, num_out))
-        test = (response == "ON")
-        return bool(test)
+
+        return response
 
     def set_int_hold_state(self, num_in, num_out, state):
-        """Hold the status of the integrator register
+        """Hold the status of the integrator register.
 
         :state: True to enable the integrator hold, False to disable the integrator hold
         """
@@ -216,9 +213,7 @@ class RedPitaya(object):
 
         :returns: True if the integrator hold is enabled, False if the integrator hold is disabled
         """
-        response = self.txrx_txt('PID:IN{}:OUT{}:INT:HOLD?'.format(num_in, num_out))
-        test = (response == "ON")
-        return bool(test)
+        return bool(self.txrx_txt('PID:IN{}:OUT{}:INT:HOLD?'.format(num_in, num_out)))
 
     def set_int_auto_state(self, num_in, num_out, state):
         """If enabled, the integrator register is reset when the PID output hits the configured
@@ -271,7 +266,7 @@ class RedPitaya(object):
 
         :returns: True if the relock feature is enabled, False if the relock feature is disabled
         """
-        response = self.tx_txt('PID:IN{}:OUT{}:REL?'.format(num_in, num_out))
+        response = self.txrx_txt('PID:IN{}:OUT{}:REL?'.format(num_in, num_out))
         test = (response == "ON")
         return bool(test)
 
