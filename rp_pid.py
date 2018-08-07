@@ -6,8 +6,8 @@ import socket
 class RedPitaya(object):
     """Class that represents the Red Pitaya.
 
-    :num_int: Input 1 or 2
-    :num_out: Output 1 or 2
+    :num_int: the input channel (1 or 2)
+    :num_out: the output channel (1 or 2)
     """
     delimiter = '\r\n'
 
@@ -71,7 +71,9 @@ class RedPitaya(object):
 
         :returns: True if fast analog outputs are enabled, False if fast analog outputs are disabled
         """
-        return bool(self.txrx_txt('OUTPUT{}:STATE?'.format(num_out)))
+        response = self.txrx_txt('OUTPUT{}:STATE?'.format(num_out))
+        test = (response == "ON")
+        return bool(test)
 
     def set_generator_frequency(self, num_out, frequency):
         """Set the frequency of fast analog outputs.
@@ -198,8 +200,8 @@ class RedPitaya(object):
         :returns: True if the integrator reset is enabled, False if the integrator reset is disabled
         """
         response = self.txrx_txt('PID:IN{}:OUT{}:INT:RES?'.format(num_in, num_out))
-
-        return response
+        test = (response == "ON")
+        return bool(test)
 
     def set_int_hold_state(self, num_in, num_out, state):
         """Hold the status of the integrator register.
@@ -213,7 +215,9 @@ class RedPitaya(object):
 
         :returns: True if the integrator hold is enabled, False if the integrator hold is disabled
         """
-        return bool(self.txrx_txt('PID:IN{}:OUT{}:INT:HOLD?'.format(num_in, num_out)))
+        response = self.txrx_txt('PID:IN{}:OUT{}:INT:HOLD?'.format(num_in, num_out))
+        test = (response == "ON")
+        return bool(test)
 
     def set_int_auto_state(self, num_in, num_out, state):
         """If enabled, the integrator register is reset when the PID output hits the configured
